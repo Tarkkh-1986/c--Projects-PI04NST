@@ -1,0 +1,803 @@
+/* 
+ * Antonio Ferreira
+ * PI04
+ * 14/01/2024
+ * Projeto Casino
+ * C#
+  */
+
+using System;
+
+namespace Casino
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // Saldo/creditos
+            int saldo = 0;
+
+            while (true)
+            {
+
+                Console.Clear();
+
+                // Exibe o banner do Casino
+                Console.WriteLine(@"
+ #####    ######   ##   ##           ##  ##    ####    ##  ##   ####      ####
+ ##  ##   ##       ### ###           ##  ##     ##     ### ##   ## ##    ##  ##
+ ##  ##   ##       #######           ##  ##     ##     ######   ##  ##   ##  ##
+ #####    ####     ## # ##  ######   ##  ##     ##     ######   ##  ##   ##  ##
+ ##  ##   ##       ##   ##           ##  ##     ##     ## ###   ##  ##   ##  ##
+ ##  ##   ##       ##   ##             ###      ##     ##  ##   ## ##    ##  ##
+ #####    ######   ##   ##             ##      ####    ##  ##   ####      ####
+");
+
+                Console.WriteLine(@$"
+
+ .----.   .--.   .-.    .----.   .---.   _
+{{ {{__-`  / {{}} \  }} |    }} {{-. \ / {{-. \ {{_}}
+.-._}} }} /  /\  \ }} '--. }} '-}} / \ '-}} /  _    {saldo}
+`----'  `-'  `-' `----' `----'   `---'  {{_}}
+");
+                // Menu principal
+                Console.WriteLine("|------------------------------|");
+                Console.WriteLine("|   1   | Inserir Créditos     |");
+                Console.WriteLine("|   2   | Jogo da Sorte        |");
+                Console.WriteLine("|   3   | Roleta               |");
+                Console.WriteLine("|   4   | Sair                 |");
+                Console.WriteLine("|------------------------------|");
+                Console.Write("\nEscolha uma opção: ");
+
+                int opcao;
+                // Solicita e valida a escolha do usuário
+                while (!int.TryParse(Console.ReadLine(), out opcao) || opcao < 1 || opcao > 4)
+                {
+                    Console.Write("Opção inválida. Tente novamente: ");
+                }
+                // Executa a opção escolhida pelo usuário
+                switch (opcao)
+                {
+                    case 1:
+                        InserirCreditos(ref saldo);
+                        break;
+
+                    case 2:
+                        // Verifica se há créditos suficientes para jogar
+                        if (saldo <= 0)
+                        {
+                            Console.WriteLine("Você não tem créditos suficientes para jogar. Insira créditos antes de continuar.");
+                            Console.ReadKey();
+                        }
+                        else
+                        {
+                            JogarJogo("Jogo da Sorte", ref saldo);
+                        }
+                        break;
+
+                    case 3:
+                        // Verifica se há créditos suficientes para jogar
+                        if (saldo <= 0)
+                        {
+                            Console.WriteLine("Você não tem créditos suficientes para jogar. Insira créditos antes de continuar.");
+                            Console.ReadKey();
+                        }
+                        else
+                        {
+                            JogarRoleta(ref saldo);
+                        }
+                        break;
+
+                    case 4:
+                        // Fechar o jogo
+                        Console.WriteLine("Obrigado por jogar no Casino!");
+                        return;
+
+                    default:
+                        Console.WriteLine("Opção inválida. Tente novamente.");
+                        break;
+                }
+            }
+        }
+        // Função para inserir créditos na conta do jogador
+        static void InserirCreditos(ref int saldo)
+        {
+            // Solicita e valida a quantidade de créditos escolhida pelo usuário
+            Console.WriteLine("Escolha a quantidade de créditos (100/200/500): ");
+            int escolhaCreditos;
+            while (!int.TryParse(Console.ReadLine(), out escolhaCreditos) || (escolhaCreditos != 100 && escolhaCreditos != 200 && escolhaCreditos != 500))
+            {
+                Console.Write("Opção inválida. Tente novamente: ");
+            }
+            // Atualiza o saldo do jogador
+            saldo += escolhaCreditos;
+            Console.WriteLine($"Créditos inseridos com sucesso! Seu saldo atual é: {saldo}");
+
+            Console.Clear();
+        }
+        // Função para iniciar o jogo da sorte
+        static void JogarJogo(string nomeJogo, ref int saldo)
+        {
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine(@"
+    888                /                  888             ,d88~~\                   d8
+    888  e88~-_  e88~88e  e88~-_     e88~\888   /~~~8e    8888     e88~-_  888-~\ _d88__  e88~~8e
+    888 d888   i 888 888 d888   i   d888  888       88b   `Y88b   d888   i 888     888   d888  88b
+    888 8888   | ""88_88"" 8888   |   8888  888  e88~-888    `Y88b, 8888   | 888     888   8888__888
+|   88P Y888   '  /      Y888   '   Y888  888 C888  888      8888 Y888   ' 888     888   Y888    ,
+ \__8""   ""88_-~  Cb       ""88_-~     ""88_/888  ""88_-888   \__88P'  ""88_-~  888     ""88_/  ""88___/
+                  Y8""""8D
+
+");
+
+                Console.WriteLine(@$"
+
+ .----.   .--.   .-.    .----.   .---.   _
+{{ {{__-`  / {{}} \  }} |    }} {{-. \ / {{-. \ {{_}}
+.-._}} }} /  /\  \ }} '--. }} '-}} / \ '-}} /  _    {saldo}
+`----'  `-'  `-' `----' `----'   `---'  {{_}}
+");
+                // Solicita e valida a escolha do número pelo usuário
+                Console.Write($"Escolha um número de 1 a 5 para o {nomeJogo}: ");
+                int escolhaNumero;
+                while (!int.TryParse(Console.ReadLine(), out escolhaNumero) || escolhaNumero < 0 || escolhaNumero > 5)
+                {
+                    Console.Write("Opção inválida. Tente novamente: ");
+                }
+                // Solicita e valida a aposta do usuário
+                Console.Write($"Faça sua aposta (Saldo atual: {saldo}): ");
+                int aposta;
+                while (!int.TryParse(Console.ReadLine(), out aposta) || aposta <= 0 || aposta > saldo)
+                {
+                    Console.Write("Aposta inválida. Tente novamente: ");
+                }
+                // Simula o giro da sorte
+                Random random = new Random();
+                int numeroSorteado = random.Next(1, 6);
+
+                // Exibe o resultado do giro da sorte
+                Console.WriteLine($"O número sorteado para o {nomeJogo} foi: {numeroSorteado}");
+
+                // Verifica se o jogador acertou no número
+                if (escolhaNumero == numeroSorteado)
+                {
+                    int ganho = aposta * 5;
+                    saldo += ganho;
+                    Console.WriteLine(@"
+ _____                _____                 ____     ______   _    _    _____
+|  __ \\     /\\     |  __ \\      /\\     |  _ \\  |  ____| | \\ | |  / ____|
+| |__) |    /  \\    | |__) |     /  \\    | |_) |  | |__    |  \\| | | (___
+|  ___/    / /\\\\   |  _  /     / /\\\\   |  _ <   |  __|   | . `  |  \\___ \\
+| |       / ____ \\  | |\\ \\   / ____\\   | |_) |  | |____  | |\\  |   ____) |
+|_|      /_/    \\\\ |_| \\_\\ /_/    \\\\ |____/   |______| |_| \\_|  |_____/ 
+");
+
+                    Console.WriteLine($"Parabéns! Você acertou no número e ganhou {ganho} créditos. Seu saldo atual é: {saldo}");
+                }
+                else
+                {
+                    saldo -= aposta;
+                    Console.WriteLine(@"
+ ####                     #
+ #   #                    #
+ #   #   ###   # ##    ## #   ###   #   #
+ ####   #   #  ##  #  #  ##  #   #  #   #
+ #      #####  #      #   #  #####  #   #
+ #      #      #      #  ##  #      #  ##
+ #       ###   #       ## #   ###    ## #
+");
+
+                    Console.WriteLine($"Você errou desta vez. Perdeu {aposta} créditos. Seu saldo atual é: {saldo}");
+
+                    if (saldo <= 0)
+                    {
+                        Console.WriteLine("Você ficou sem saldo. Boa sorte para a próxima vez");
+                        Console.WriteLine("Pressione qualquer tecla para voltar ao menu...");
+                        Console.ReadKey();
+                        return;
+                    }
+                }
+                // Pergunta ao jogador se deseja jogar novamente
+                Console.WriteLine("Deseja jogar novamente? (S/N)");
+                char resposta = Console.ReadKey().KeyChar;
+
+                if (resposta != 'S' && resposta != 's')
+                    break;
+
+                Console.Clear();
+            }
+        }
+
+        // Função para girar a roleta
+        static (int numeroSorteado, string corSorteada) GirarRoleta()
+        {
+            // Simula o giro da roleta e retorna um número aleatório de 0 a 36 e a cor associada
+            Console.WriteLine("Girando a roleta...");
+            System.Threading.Thread.Sleep(2000);
+            Random random = new Random();
+
+            int numeroSorteado = random.Next(0, 37);
+            string corSorteada = ObterCorAssociada(numeroSorteado);
+
+            return (numeroSorteado, corSorteada);
+        }
+
+        // Função para obter a cor associada a um número na roleta
+        static string ObterCorAssociada(int numero)
+        {
+            if (numero == 0)
+            {
+                return "Verde";
+            }
+            else if (numero % 2 == 0)
+            {
+                return "Preto";
+            }
+            else
+            {
+                return "Vermelho";
+            }
+        }
+
+        // Função para jogar a Roleta
+        static void JogarRoleta(ref int saldo)
+        {
+            while (true)
+            {
+                Console.Clear(); // Limpa a tela no início de cada ciclo
+
+                Console.WriteLine("Bem-vindo à Roleta!");
+                ExibirArteRoleta(); // Exibe a arte da roleta
+
+                // Solicita ao jogador escolher um número da roleta
+                Console.Write("Escolha um número da roleta (0 a 36): ");
+                int numeroEscolhido;
+                while (!int.TryParse(Console.ReadLine(), out numeroEscolhido) || numeroEscolhido < 0 || numeroEscolhido > 36)
+                {
+                    Console.Write("Entrada inválida. Por favor, escolha um número válido (0 a 36): ");
+                }
+
+                // Solicita ao jogador escolher uma cor da roleta
+                Console.Write("Escolha uma cor da roleta (Vermelho/Preto/Verde): ");
+                string corEscolhida;
+                while (true)
+                {
+                    corEscolhida = Console.ReadLine().ToLower();
+                    if (corEscolhida == "vermelho" || corEscolhida == "preto" || corEscolhida == "verde")
+                        break;
+                    Console.Write("Entrada inválida. Por favor, escolha uma cor válida (Vermelho/Preto/Verde): ");
+                }
+
+                // Solicita ao jogador fazer uma aposta
+                Console.Write($"Faça sua aposta (Saldo atual: {saldo}): ");
+                int aposta;
+                while (!int.TryParse(Console.ReadLine(), out aposta) || aposta <= 0 || aposta > saldo)
+                {
+                    Console.Write("Aposta inválida. Tente novamente: ");
+                }
+
+                // Gira a roleta para obter o número e a cor sorteados
+                var resultadoRoleta = GirarRoleta();
+                int numeroSorteado = resultadoRoleta.numeroSorteado;
+                string corSorteada = resultadoRoleta.corSorteada;
+
+                Console.WriteLine($"A roleta foi girada e o número sorteado foi: {numeroSorteado}, e a cor sorteada foi: {corSorteada}");
+
+                // Verifica se o jogador acertou no número e na cor
+                if (numeroEscolhido == numeroSorteado && corEscolhida == corSorteada.ToLower())
+                {
+                    int ganho = aposta * 20;
+                    saldo += ganho;
+                    MostrarResultado($"Parabéns! Você acertou no número {numeroSorteado} e na cor {corSorteada}.", ganho, saldo);
+                }
+                // Verifica se o jogador acertou no número ou na cor
+                else if (numeroEscolhido == numeroSorteado)
+                {
+                    int ganho = aposta * 10;
+                    saldo += ganho;
+                    MostrarResultado($"Parabéns! Você acertou no número {numeroSorteado}.", ganho, saldo);
+                }
+                else if (corEscolhida == corSorteada.ToLower())
+                {
+                    int ganho = aposta * 1;
+                    saldo += ganho;
+                    MostrarResultado($"Parabéns! Você acertou na cor {corSorteada}.", ganho, saldo);
+                }
+                // Verifica se o jogador acertou cor verde ou número 0
+                else if ((corEscolhida == "verde" && numeroEscolhido == 0) || (corSorteada == "verde" && numeroSorteado == 0))
+                {
+                    int ganho = aposta * 50;
+                    saldo += ganho;
+                    MostrarResultado($"Parabéns! Você acertou na cor verde ou no número 0.", ganho, saldo);
+                }
+                // Caso contrário, o jogador perdeu
+                else
+                {
+                    saldo -= aposta;
+                    MostrarResultado($"Você perdeu. O número sorteado foi: {numeroSorteado}, e a cor sorteada foi: {corSorteada}", -aposta, saldo);
+
+                    // Verifica se o jogador ficou sem saldo
+                    if (saldo <= 0)
+                    {
+                        Console.WriteLine("Você ficou sem saldo. Boa sorte para a próxima vez.");
+                        Console.WriteLine("Pressione qualquer tecla para voltar ao menu...");
+                        Console.ReadKey();
+                        return;
+                    }
+                }
+
+                // Pergunta ao jogador se deseja jogar novamente
+                Console.WriteLine("Deseja jogar novamente? (S/N)");
+                char resposta = Console.ReadKey().KeyChar;
+
+                // Sai do loop se a resposta não for 'S' ou 's'
+                if (resposta != 'S' && resposta != 's')
+                    break;
+
+                // Limpa a tela para o próximo jogo
+                Console.Clear();
+            }
+        }
+
+        // Função para mostrar o resultado do jogo
+        static void MostrarResultado(string mensagem, int ganhoPerda, int saldoAtual)
+        {
+            Console.Clear();
+
+            if (ganhoPerda > 0)
+            {
+                Console.WriteLine(@"
+ _____                _____                 ____     ______   _    _    _____
+|  __ \\     /\\     |  __ \\      /\\     |  _ \\  |  ____| | \\ | |  / ____|
+| |__) |    /  \\    | |__) |     /  \\    | |_) |  | |__    |  \\| | | (___
+|  ___/    / /\\\\   |  _  /     / /\\\\   |  _ <   |  __|   | . `  |  \\___ \\
+| |       / ____ \\  | |\\ \\   / ____\\   | |_) |  | |____  | |\\  |   ____) |
+|_|      /_/    \\\\ |_| \\_\\ /_/    \\\\ |____/   |______| |_| \\_|  |_____/ 
+");
+                Console.WriteLine($"Você ganhou {ganhoPerda} créditos. Seu saldo atual é: {saldoAtual}");
+            }
+            else if (ganhoPerda < 0)
+            {
+                Console.WriteLine(@"
+ ####                     #
+ #   #                    #
+ #   #   ###   # ##    ## #   ###   #   #
+ ####   #   #  ##  #  #  ##  #   #  #   #
+ #      #####  #      #   #  #####  #   #
+ #      #      #      #  ##  #      #  ##
+ #       ###   #       ## #   ###    ## #
+");
+                Console.WriteLine($"Você perdeu {-ganhoPerda} créditos. Seu saldo atual é: {saldoAtual}");
+            }
+            else
+            {
+                Console.WriteLine("Seu saldo permanece inalterado.");
+                Console.WriteLine($"Seu saldo atual é: {saldoAtual}");
+            }
+
+            Console.WriteLine($"{mensagem}\n\nPressione qualquer tecla para continuar...");
+            Console.ReadKey();
+        }
+        // Adicione esta função para exibir a arte da roleta
+        static void ExibirArteRoleta()
+        {
+            Console.WriteLine(@"
+    //   ) )     //   ) )     / /        //   / /  /__  ___/     // | |
+   //___/ /     //   / /     / /        //____       / /        //__| |
+  / ___ (      //   / /     / /        / ____       / /        / ___  |
+ //   | |     //   / /     / /        //           / /        //    | |
+//    | |    ((___/ /     / /____/ / //____/ /    / /        //     | |
+");
+        }
+    }
+}
+
+
+
+
+/*
+using System;
+
+namespace Casino
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // Saldo/creditos
+            int saldo = 0;
+
+            while (true)
+            {
+                Console.Clear();
+
+                // Exibe o banner do Casino
+                Console.WriteLine(@"
+ #####    ######   ##   ##           ##  ##    ####    ##  ##   ####      ####
+ ##  ##   ##       ### ###           ##  ##     ##     ### ##   ## ##    ##  ##
+ ##  ##   ##       #######           ##  ##     ##     ######   ##  ##   ##  ##
+ #####    ####     ## # ##  ######   ##  ##     ##     ######   ##  ##   ##  ##
+ ##  ##   ##       ##   ##           ##  ##     ##     ## ###   ##  ##   ##  ##
+ ##  ##   ##       ##   ##             ###      ##     ##  ##   ## ##    ##  ##
+ #####    ######   ##   ##             ##      ####    ##  ##   ####      ####
+");
+
+                Console.WriteLine(@$"
+
+ .----.   .--.   .-.    .----.   .---.   _
+{{ {{__-`  / {{}} \  }} |    }} {{-. \ / {{-. \ {{_}}
+.-._}} }} /  /\  \ }} '--. }} '-}} / \ '-}} /  _    {saldo}
+`----'  `-'  `-' `----' `----'   `---'  {{_}}
+");
+                // Menu principal
+                Console.WriteLine("|------------------------------|");
+                Console.WriteLine("|   1   | Inserir Créditos     |");
+                Console.WriteLine("|   2   | Jogo da Sorte        |");
+                Console.WriteLine("|   3   | Roleta               |");
+                Console.WriteLine("|   4   | Sair                 |");
+                Console.WriteLine("|------------------------------|");
+                Console.Write("\nEscolha uma opção: ");
+
+                int opcao;
+                // Solicita e valida a escolha do usuário
+                while (!int.TryParse(Console.ReadLine(), out opcao) || opcao < 1 || opcao > 4)
+                {
+                    Console.Write("Opção inválida. Tente novamente: ");
+                }
+                // Executa a opção escolhida pelo usuário
+                switch (opcao)
+                {
+                    case 1:
+                        InserirCreditos(ref saldo);
+                        break;
+
+                    case 2:
+                        // Verifica se há créditos suficientes para jogar
+                        if (saldo <= 0)
+                        {
+                            Console.WriteLine("Você não tem créditos suficientes para jogar. Insira créditos antes de continuar.");
+                            Console.ReadKey();
+                        }
+                        else
+                        {
+                            JogarJogo("Jogo da Sorte", ref saldo);
+                        }
+                        break;
+
+                    case 3:
+                        // Verifica se há créditos suficientes para jogar
+                        if (saldo <= 0)
+                        {
+                            Console.WriteLine("Você não tem créditos suficientes para jogar. Insira créditos antes de continuar.");
+                            Console.ReadKey();
+                        }
+                        else
+                        {
+                            JogarRoleta(ref saldo);
+                        }
+                        break;
+
+                    case 4:
+                        // Fechar o jogo
+                        Console.WriteLine("Obrigado por jogar no Casino!");
+                        return;
+
+                    default:
+                        Console.WriteLine("Opção inválida. Tente novamente.");
+                        break;
+                }
+            }
+        }
+        // Função para inserir créditos na conta do jogador
+        static void InserirCreditos(ref int saldo)
+        {
+            // Solicita e valida a quantidade de créditos escolhida pelo usuário
+            Console.WriteLine("Escolha a quantidade de créditos (100/200/500): ");
+            int escolhaCreditos;
+            while (!int.TryParse(Console.ReadLine(), out escolhaCreditos) || (escolhaCreditos != 100 && escolhaCreditos != 200 && escolhaCreditos != 500))
+            {
+                Console.Write("Opção inválida. Tente novamente: ");
+            }
+            // Atualiza o saldo do jogador
+            saldo += escolhaCreditos;
+            Console.WriteLine($"Créditos inseridos com sucesso! Seu saldo atual é: {saldo}");
+
+            Console.Clear();
+        }
+        // Função para iniciar o jogo da sorte
+        static void JogarJogo(string nomeJogo, ref int saldo)
+        {
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine(@"
+    888                /                  888             ,d88~~\                   d8
+    888  e88~-_  e88~88e  e88~-_     e88~\888   /~~~8e    8888     e88~-_  888-~\ _d88__  e88~~8e
+    888 d888   i 888 888 d888   i   d888  888       88b   `Y88b   d888   i 888     888   d888  88b
+    888 8888   | ""88_88"" 8888   |   8888  888  e88~-888    `Y88b, 8888   | 888     888   8888__888
+|   88P Y888   '  /      Y888   '   Y888  888 C888  888      8888 Y888   ' 888     888   Y888    ,
+ \__8""   ""88_-~  Cb       ""88_-~     ""88_/888  ""88_-888   \__88P'  ""88_-~  888     ""88_/  ""88___/
+                  Y8""""8D
+
+");
+
+                Console.WriteLine(@$"
+
+ .----.   .--.   .-.    .----.   .---.   _
+{{ {{__-`  / {{}} \  }} |    }} {{-. \ / {{-. \ {{_}}
+.-._}} }} /  /\  \ }} '--. }} '-}} / \ '-}} /  _    {saldo}
+`----'  `-'  `-' `----' `----'   `---'  {{_}}
+");
+                // Solicita e valida a escolha do número pelo usuário
+                Console.Write($"Escolha um número de 1 a 5 para o {nomeJogo}: ");
+                int escolhaNumero;
+                while (!int.TryParse(Console.ReadLine(), out escolhaNumero) || escolhaNumero < 0 || escolhaNumero > 5)
+                {
+                    Console.Write("Opção inválida. Tente novamente: ");
+                }
+                // Solicita e valida a aposta do usuário
+                Console.Write($"Faça sua aposta (Saldo atual: {saldo}): ");
+                int aposta;
+                while (!int.TryParse(Console.ReadLine(), out aposta) || aposta <= 0 || aposta > saldo)
+                {
+                    Console.Write("Aposta inválida. Tente novamente: ");
+                }
+                // Simula o giro da sorte
+                Random random = new Random();
+                int numeroSorteado = random.Next(1, 6);
+
+                // Exibe o resultado do giro da sorte
+                Console.WriteLine($"O número sorteado para o {nomeJogo} foi: {numeroSorteado}");
+
+                // Verifica se o jogador acertou no número
+                if (escolhaNumero == numeroSorteado)
+                {
+                    int ganho = aposta * 5;
+                    saldo += ganho;
+                    Console.WriteLine(@"
+ _____                _____                 ____     ______   _    _    _____
+|  __ \\     /\\     |  __ \\      /\\     |  _ \\  |  ____| | \\ | |  / ____|
+| |__) |    /  \\    | |__) |     /  \\    | |_) |  | |__    |  \\| | | (___
+|  ___/    / /\\\\   |  _  /     / /\\\\   |  _ <   |  __|   | . `  |  \\___ \\
+| |       / ____ \\  | |\\ \\   / ____\\   | |_) |  | |____  | |\\  |   ____) |
+|_|      /_/    \\\\ |_| \\_\\ /_/    \\\\ |____/   |______| |_| \\_|  |_____/ 
+");
+
+                    Console.WriteLine($"Parabéns! Você acertou no número e ganhou {ganho} créditos. Seu saldo atual é: {saldo}");
+                }
+                else
+                {
+                    saldo -= aposta;
+                    Console.WriteLine(@"
+ ####                     #
+ #   #                    #
+ #   #   ###   # ##    ## #   ###   #   #
+ ####   #   #  ##  #  #  ##  #   #  #   #
+ #      #####  #      #   #  #####  #   #
+ #      #      #      #  ##  #      #  ##
+ #       ###   #       ## #   ###    ## #
+");
+
+                    Console.WriteLine($"Você errou desta vez. Perdeu {aposta} créditos. Seu saldo atual é: {saldo}");
+
+                    if (saldo <= 0)
+                    {
+                        Console.WriteLine("Você ficou sem saldo. Boa sorte para a próxima vez");
+                        Console.WriteLine("Pressione qualquer tecla para voltar ao menu...");
+                        Console.ReadKey();
+                        return;
+                    }
+                }
+                // Pergunta ao jogador se deseja jogar novamente
+                Console.WriteLine("Deseja jogar novamente? (S/N)");
+                char resposta = Console.ReadKey().KeyChar;
+
+                if (resposta != 'S' && resposta != 's')
+                    break;
+
+                Console.Clear();
+            }
+        }
+
+        // Função para jogar a Roleta
+        static void JogarRoleta(ref int saldo)
+        {
+            // Limpa a tela do console e exibe a arte da roleta
+            Console.Clear();
+            ExibirArteRoleta();
+
+            int numeroEscolhido;
+            string corEscolhida;
+            int aposta;
+
+            while (true)
+            {
+                // Pede ao jogador para escolher um número da roleta
+                Console.Write("Escolha um número da roleta (0 a 36): ");
+                while (!int.TryParse(Console.ReadLine(), out numeroEscolhido) || numeroEscolhido < 0 || numeroEscolhido > 36)
+                {
+                    Console.Write("Entrada inválida. Por favor, escolha um número válido (0 a 36): ");
+                }
+
+                // Pede ao jogador para escolher uma cor da roleta
+                Console.Write("Escolha uma cor da roleta (Vermelho/Preto/Verde): ");
+                while (true)
+                {
+                    corEscolhida = Console.ReadLine().ToLower();
+                    if (corEscolhida == "vermelho" || corEscolhida == "preto" || corEscolhida == "verde")
+                        break;
+                    Console.Write("Entrada inválida. Por favor, escolha uma cor válida (Vermelho/Preto/Verde): ");
+                }
+
+                // Pede ao jogador para fazer uma aposta
+                Console.Write($"Faça sua aposta (Saldo atual: {saldo}): ");
+                while (!int.TryParse(Console.ReadLine(), out aposta) || aposta <= 0 || aposta > saldo)
+                {
+                    Console.Write("Aposta inválida. Tente novamente: ");
+                }
+
+                // Gira a roleta para obter o número e a cor sorteados
+                int numeroSorteado = GirarNumeroRoleta();
+                string corSorteada = GirarCorRoleta();
+
+                // Exibe o resultado do giro da roleta
+                Console.WriteLine($"A roleta foi girada e o {(new Random().Next(0, 2) == 0 ? $"número sorteado foi: {numeroSorteado}" : $"cor sorteada foi: {corSorteada}")}");
+
+                // Verifica se o jogador acertou no número 
+                if (numeroEscolhido == numeroSorteado)
+                {
+                    int ganho = aposta * 10;
+                    saldo += ganho;
+                    MostrarResultado("Parabéns! Você acertou no numero.", ganho, saldo);
+                }
+                // Verifica se o jogador acertou na cor
+                else if (corEscolhida == corSorteada.ToLower())
+                {
+                    int ganho = aposta * 2;
+                    saldo += ganho;
+                    MostrarResultado("Parabéns! Você acertou na cor.", ganho, saldo);
+                }
+                // Caso contrário, o jogador perdeu
+                else
+                {
+                    saldo -= aposta;
+                    MostrarResultado("", -aposta, saldo);
+
+                    // Verifica se o jogador ficou sem saldo
+                    if (saldo <= 0)
+                    {
+                        Console.WriteLine("Você ficou sem saldo. Boa sorte para a próxima vez.");
+                        Console.WriteLine("Pressione qualquer tecla para voltar ao menu...");
+                        Console.ReadKey();
+                        return;
+                    }
+                }
+
+                // Pergunta ao jogador se deseja jogar novamente
+                Console.WriteLine("Deseja jogar novamente? (S/N)");
+                char resposta = Console.ReadKey().KeyChar;
+
+                // Sai do loop se a resposta não for 'S' ou 's'
+                if (resposta != 'S' && resposta != 's')
+                    break;
+
+                // Limpa a tela para o próximo jogo
+                Console.Clear();
+            }
+        }
+
+        // Função para mostrar o resultado do jogo
+        static void MostrarResultado(string mensagem, int ganhoPerda, int saldoAtual)
+        {
+            // Exibe uma mensagem visual do resultado do jogo (vitória, derrota ou saldo inalterado)
+            ExibirMensagemResultado(mensagem, ganhoPerda, saldoAtual);
+
+            // Pede ao jogador para pressionar qualquer tecla para continuar
+            Console.WriteLine("\nPressione qualquer tecla para continuar...");
+            Console.ReadKey();
+        }
+
+        // Função para girar o número da roleta
+        static int GirarNumeroRoleta()
+        {
+            // Simula o giro da roleta e retorna um número aleatório de 0 a 36 (representando os números da roleta)
+            Console.WriteLine("Girando a roleta...");
+            System.Threading.Thread.Sleep(2000);
+            Random random = new Random();
+            return random.Next(0, 37);
+        }
+
+        // Função para girar a cor da roleta
+        static string GirarCorRoleta()
+        {
+            // Simula o giro da roleta e retorna uma cor aleatória (Preto, Vermelho ou Verde)
+            Console.WriteLine("Girando a roleta...");
+            System.Threading.Thread.Sleep(2000);
+            Random random = new Random();
+
+            int numeroSorteado = random.Next(0, 38); // Adiciona 1 ao intervalo para incluir 37 (número máximo na roleta)
+
+            if (numeroSorteado == 0)
+            {
+                return "Verde";
+            }
+            else if (numeroSorteado % 2 == 0)
+            {
+                return "Preto";
+            }
+            else
+            {
+                return "Vermelho";
+            }
+        }
+        // Função para exibir a arte da roleta
+        static void ExibirArteRoleta()
+        {
+            // Exibe a arte da roleta no console
+            Console.WriteLine(@"
+    //   ) )     //   ) )     / /        //   / /  /__  ___/     // | |
+   //___/ /     //   / /     / /        //____       / /        //__| |
+  / ___ (      //   / /     / /        / ____       / /        / ___  |
+ //   | |     //   / /     / /        //           / /        //    | |
+//    | |    ((___/ /     / /____/ / //____/ /    / /        //     | |
+");
+
+        }
+
+        // Função para exibir a mensagem visual do resultado do jogo
+        static void ExibirMensagemResultado(string mensagem, int ganhoPerda, int saldoAtual)
+        {
+            // Exibe uma mensagem visual do resultado do jogo (vitória, derrota ou saldo inalterado)
+            if (ganhoPerda > 0)
+            {
+                Console.WriteLine(@"
+ _____                _____                 ____     ______   _    _    _____
+|  __ \\     /\\     |  __ \\      /\\     |  _ \\  |  ____| | \\ | |  / ____|
+| |__) |    /  \\    | |__) |     /  \\    | |_) |  | |__    |  \\| | | (___
+|  ___/    / /\\\\   |  _  /     / /\\\\   |  _ <   |  __|   | . `  |  \\___ \\
+| |       / ____ \\  | |\\ \\   / ____\\   | |_) |  | |____  | |\\  |   ____) |
+|_|      /_/    \\\\ |_| \\_\\ /_/    \\\\ |____/   |______| |_| \\_|  |_____/ 
+");
+
+                Console.WriteLine(@$"
+ {mensagem}
+ .----.   .--.   .-.    .----.   .---.   _
+{{ {{__-`  / {{}} \  }} |    }} {{-. \ / {{-. \ {{_}}
+.-._}} }} /  /\  \ }} '--. }} '-}} / \ '-}} /  _    {saldoAtual}
+`----'  `-'  `-' `----' `----'   `---'  {{_}}
+");
+                Console.WriteLine($"Você ganhou {ganhoPerda} créditos. Seu saldo atual é: {saldoAtual}");
+            }
+            else if (ganhoPerda < 0)
+            {
+                Console.WriteLine(@"
+ ####                     #
+ #   #                    #
+ #   #   ###   # ##    ## #   ###   #   #
+ ####   #   #  ##  #  #  ##  #   #  #   #
+ #      #####  #      #   #  #####  #   #
+ #      #      #      #  ##  #      #  ##
+ #       ###   #       ## #   ###    ## #
+");
+
+                Console.WriteLine(@$"
+ {mensagem}
+ .----.   .--.   .-.    .----.   .---.   _
+{{ {{__-`  / {{}} \  }} |    }} {{-. \ / {{-. \ {{_}}
+.-._}} }} /  /\  \ }} '--. }} '-}} / \ '-}} /  _    {saldoAtual}
+`----'  `-'  `-' `----' `----'   `---'  {{_}}
+");
+                Console.WriteLine($"Você perdeu {-ganhoPerda} créditos. Seu saldo atual é: {saldoAtual}");
+            }
+            else
+            {
+                Console.WriteLine($"Seu saldo permanece inalterado. Seu saldo atual é: {saldoAtual}");
+            }
+        }
+    }
+}
+
+*/
+
